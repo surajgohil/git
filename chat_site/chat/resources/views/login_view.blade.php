@@ -2,7 +2,7 @@
 @section('content')
     <form class="border rounded p-3" action="{{ Route('login_user') }}" method="POST">
         <div class="form-group">
-            <label for="login_email">Username</label>
+            <label for="login_email">--Username</label>
             <input type="text" class="form-control" name="uname" id="login_email" placeholder="Enter email">
             <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
         </div>
