@@ -39,27 +39,26 @@ class chatController extends Controller
     {
         if($request->user_id != session()->get('id'))
         {
-            // $all_messages = chat::where('conversation_id','['.session()->get('id').','.$request->user_id.']')->get();
-            // $all_messages = chat::where('conversation_id','like', '%'.session()->get('id').'%')
-            //                     ->where('receiver',$request->user_id)
-            //                     ->orWhere('receiver',$request->user_id)
-            //                     ->get();
-            
             $all_messages = chat::where('conversation_id','like', '%'.session()->get('id').'%')
                                 ->where('conversation_id','like', '%'.$request->user_id.'%')
                                 ->get();
             $messages = $all_messages->toArray();
 
-            // echo '<pre>';print_r($messages);exit;
             if(!empty($messages))
             {
-                $html = array();
+                $html = '';
                 foreach($messages as $data)
                 {
                     if($data['sender'] == session()->get('id')){
-                        $html[] .= '<div style="justify-content: end;"><span style="border-radius: 8px 8px 0px 8px">'.$data['msg'].'</span></div>';
+                        $html .= '<div style="justify-content: end; align-items: end;">';
+                        $html .= '     <span style="border-radius: 8px 8px 0px 8px;">'.$data['msg'].'</span>';
+                        $html .= '     <span style="border-radius: 50%;height: 20px; width: 0%; font-size: 8px; margin-left: 5px;display: flex; justify-content: center;"> US </span>';
+                        $html .= '</div>';
                     }else{
-                        $html[] .= '<div><span>'.$data['msg'].'</span></div>';
+                        $html .= '<div style="display: flex; align-items: end;">';
+                        $html .= '     <span style="margin-right: 5px; border-radius: 50%;height: 20px; width: 0%; font-size: 8px; margin-left: 5px;display: flex; justify-content: center;"> US </span>';
+                        $html .= '     <span>'.$data['msg'].'</span>';
+                        $html .= '</div>';
                     }
                 }
             }else{
@@ -72,7 +71,6 @@ class chatController extends Controller
         else
         {
             $all_messages = chat::where('conversation_id','['.session()->get('id').',0]')->get();
-            // $all_messages = chat::where('receiver',$request->user_id)->get();
             $messages = $all_messages->toArray();
 
             if(!empty($messages))

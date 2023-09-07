@@ -175,7 +175,7 @@
             var token = $('meta[name="csrf-token"]').attr('content');
             var receiver_id = $('#select_user_id').attr('user_id');
             
-            $('#send-btn').val('');
+            $('#send-btn').replaceWith('<textarea type="text" name="message" id="send-btn" placeholder="Message..." value=""></textarea>');
             
             $.ajax({
                 url: '{{ route("send_message") }}',
@@ -186,6 +186,9 @@
                         'receiver_id':receiver_id
                     },
                 dataType: 'json',
+                beforeSend: function(msg){
+                    $(".button").button("disable");
+                },
                 success: function (res) 
                 {
                     if (res.status == true) 
@@ -194,6 +197,7 @@
                         var html = '<div style="justify-content: end;"><span style="border-radius: 8px 8px 0px 8px">'+res.msg+'</span></div>';
                         $('.message_not_found_error').remove();
                         $('.chatbox').append(html);
+                        $(".chatbox").animate({ scrollTop: 20000000 }, "slow");
                     } else {
                         console.error('AJAX request failed.');
                     }
