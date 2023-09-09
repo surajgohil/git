@@ -58,7 +58,7 @@ class chatController extends Controller
                         $html .= '<div style="display: flex; align-items: end;">';
                         $html .= '     <span style="margin-right: 5px; border-radius: 50%;height: 20px; width: 0%; font-size: 8px; margin-left: 5px;display: flex; justify-content: center;"> US </span>';
                         $html .= '     <span>'.$data['msg'].'</span>';
-                        $html .= '</div>';
+                        $html .= '</div>'; 
                     }
                 }
             }else{
