@@ -106,6 +106,9 @@
                     <div><span>I Am Fine</span></div>
                     <div style="justify-content: end;"><span style="border-radius: 10px 0px 0px 10px">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</span></div> --}}
                 </div>
+                <div class="d-flex justify-content-center align-items-center h-100 d-none chatbox_lorder">
+                    <div class="spinner-border text-info" role="status"></div>
+                </div>
             </div>
 
 
@@ -194,10 +197,9 @@
                     if (res.status == true) 
                     {
                         conn.send(msg);
-                        var html = '<div style="justify-content: end;"><span style="border-radius: 8px 8px 0px 8px">'+res.msg+'</span></div>';
                         $('.message_not_found_error').remove();
-                        $('.chatbox').append(html);
-                        $(".chatbox").animate({ scrollTop: 20000000 }, "slow");
+                        $('.chatbox').append(res.msg);
+                        $(".chat_part").animate({ scrollTop: 20000000 }, "slow");
                     } else {
                         console.error('AJAX request failed.');
                     }
@@ -211,24 +213,31 @@
         function scroll_down()
         {
             var scroll_name = $(".chatbox");
-            $(scroll_name).animate({ scrollTop: scroll_name.height() }, 1000);
+            $(scroll_name).animate({ scrollTop: 20000000 }, "slow");
         }
 
         function get_all_messages(user_id)
         {
             var token = $('meta[name="csrf-token"]').attr('content');
             $.ajax({
-                url: '{{ route("get_all_message") }}',
+                url: '{{ route("get_all_messages") }}',
                 method: 'POST',
                 data: { 
                         '_token': token,
                         'user_id':user_id
                     },
-                success: function (res) {
+                beforeSend: function(){
+                    $('.chatbox').css('display','none');
+                    $('.chatbox_lorder').removeClass('d-none');
+                },
+                success: function (res) 
+                {
+                    $('.chatbox_lorder').addClass('d-none');
+                    $('.chatbox').css('display','flex');
+                    
                     if (res.status == true) {
                         if($('.chatbox').append(res.messages)){
-                            // scroll_down();
-                            $('.chatbox').animate({ scrollTop: $(document).height() }, 1000);
+                            $(".chat_part").animate({ scrollTop: 20000000 }, "slow");
                         }
                     } else {
                         console.error('AJAX request failed.');
@@ -264,6 +273,34 @@
                 }
             });
         });
+
+
+        // Listen for keyup event on the search input
+        $(".search_box input").on("keyup", function () {
+                var searchText = $(this).val().toLowerCase();
+
+                // Loop through each user details container
+                $(".user_list_container .user_details").each(function () {
+                    var userName = $(this).find(".user_full_name").text().toLowerCase();
+
+                    // Check if the user's name contains the search text
+                    if (userName.indexOf(searchText) !== -1) 
+                    {
+                        // Highlight the matching text
+                        $(this).find(".user_full_name").html(
+                            userName.replace(new RegExp(searchText, "gi"), function (match) {
+                                return '<span class="bg-warning">' + match + '</span>';
+                            })
+                        ).css('text-transform','capitalize');
+                        $(this).show();
+                    } else {
+                        // Remove highlighting and hide the container
+                        $(this).find(".user_full_name").html(userName);
+                        $(this).hide();
+                    }
+                });
+            });
+
         
     });
 </script>

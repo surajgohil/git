@@ -12,7 +12,7 @@ class chatController extends Controller
     {
         $data = array();
         $msg = new chat();
-
+        $html = '';
         if(session()->get('id') == $request->receiver_id)
         {
             // login user self conversation stored
@@ -32,11 +32,24 @@ class chatController extends Controller
             $msg->type = 'single';
             $msg->save();
         }
-        $data = array( 'status' => true , 'msg' => $request->msg );
+
+        $all_messages = chat::where('conversation_id','like', '%'.session()->get('id').'%')
+                            ->where('conversation_id','like', '%'.$request->user_id.'%')
+                            ->orderBy('created_at', 'DESC')
+                            ->first();
+        $messages = $all_messages->toArray();
+
+        $html .= '<div style="justify-content: end; align-items: end;">';
+        $html .= '     <span style="border-radius: 8px 8px 0px 8px;">'.$messages['msg'].'</span>';
+        $html .= '     <span style="border-radius: 50%;height: 20px; width: 0%; font-size: 8px; margin-left: 5px;display: flex; justify-content: center;"> US </span>';
+        $html .= '</div>';
+        
+        $data = array( 'status' => true , 'msg' => $html );
         return $data;
     }
-    public function get_all_message(Request $request)
+    public function get_all_messages(Request $request)
     {
+        $html = '';
         if($request->user_id != session()->get('id'))
         {
             $all_messages = chat::where('conversation_id','like', '%'.session()->get('id').'%')
@@ -46,17 +59,16 @@ class chatController extends Controller
 
             if(!empty($messages))
             {
-                $html = '';
                 foreach($messages as $data)
                 {
                     if($data['sender'] == session()->get('id')){
                         $html .= '<div style="justify-content: end; align-items: end;">';
                         $html .= '     <span style="border-radius: 8px 8px 0px 8px;">'.$data['msg'].'</span>';
-                        $html .= '     <span style="border-radius: 50%;height: 20px; width: 0%; font-size: 8px; margin-left: 5px;display: flex; justify-content: center;"> US </span>';
+                        $html .= '     <span class="sender_side_avatar">'.substr(session()->get('name'),0,2).'</span>';
                         $html .= '</div>';
                     }else{
                         $html .= '<div style="display: flex; align-items: end;">';
-                        $html .= '     <span style="margin-right: 5px; border-radius: 50%;height: 20px; width: 0%; font-size: 8px; margin-left: 5px;display: flex; justify-content: center;"> US </span>';
+                        $html .= '     <span class="receiver_side_avatar"> US </span>';
                         $html .= '     <span>'.$data['msg'].'</span>';
                         $html .= '</div>'; 
                     }
@@ -75,10 +87,12 @@ class chatController extends Controller
 
             if(!empty($messages))
             {
-                $html = array();
                 foreach($messages as $data)
                 {
-                    $html[] .= '<div style="justify-content: end;"><span style="border-radius: 8px 8px 0px 8px">'.$data['msg'].'</span></div>';
+                    $html .= '<div style="justify-content: end;align-items:end;">';
+                    $html .= '  <span style="border-radius: 8px 8px 0px 8px">'.$data['msg'].'</span>';
+                    $html .= '  <span style="border-radius: 50%;height: 20px; width: 0%; font-size: 8px; margin-left: 5px;display: flex; justify-content: center;"> US </span>';
+                    $html .= '</div>';
                 }
             }else{
                 $html .= '<div class="message_not_found_error w-100 h-100 d-flex justify-content-center align-items-center">';
