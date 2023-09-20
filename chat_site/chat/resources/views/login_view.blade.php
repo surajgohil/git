@@ -10,8 +10,6 @@
             <p class="text-danger">{{ $message }}</p>
         @enderror
 
-
-
         <div class="form-group">
             <label for="login_password">Password</label>
             <input type="password" class="form-control" name="pass" id="login_password" placeholder="Password">
@@ -19,7 +17,6 @@
         @error('pass')
             <p class="text-danger">{{ $message }}</p>
         @enderror
-
 
         <div class="form-group form-check">
             <input type="checkbox" class="form-check-input" id="login_check_pass">

@@ -61,7 +61,8 @@ class chatController extends Controller
             {
                 foreach($messages as $data)
                 {
-                    if($data['sender'] == session()->get('id')){
+                    if($data['sender'] == session()->get('id'))
+                    {
                         $html .= '<div style="justify-content: end; align-items: end;">';
                         $html .= '     <span style="border-radius: 8px 8px 0px 8px;">'.$data['msg'].'</span>';
                         $html .= '     <span class="sender_side_avatar">'.substr(session()->get('name'),0,2).'</span>';
