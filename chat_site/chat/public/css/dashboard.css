@@ -1,3 +1,8 @@
+:root {
+    --blue_theme: linear-gradient(156.8deg, rgb(84 181 255) 27.1%, rgb(60 100 247) 77.8%);
+    --bg_color: linear-gradient(322deg, rgb(204, 228, 247) 11.2%, rgb(237, 246, 250) 100.2%);
+}
+
 *{
     margin: 0px;
     padding: 0px;
@@ -9,7 +14,7 @@
     width: 100% !important;
     height: 100vh !important;
     margin: 0px;
-    background: linear-gradient(322deg, rgb(204, 228, 247) 11.2%, rgb(237, 246, 250) 100.2%);
+    background: var(--bg_color);
 }
 
 ::-webkit-scrollbar {
@@ -27,9 +32,6 @@
     background: #706a6a; 
 }
 
-:root {
-    --blue_theme: linear-gradient(156.8deg, rgb(84 181 255) 27.1%, rgb(60 100 247) 77.8%);
-}
 
 /* 
 ============================================

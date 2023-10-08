@@ -21,13 +21,14 @@ class registerController extends Controller
         $validatedData = $request->validate([
             'uname' => 'required',
             'email' => 'required',
-            'pass'  => 'required',
+            'pass'  => 'required|confirmed',
             'cpass' => 'required',
         ],
         [
-            'uname.required' => 'The user name field is required.',
-            'pass.required'  => 'The password field is required.',
-            'cpass.required' => 'The comfirm password field is required.'
+            'uname.required' => 'The user name is required.',
+            'pass.required'  => 'The password is required.',
+            'pass.confirmed' => 'The confirm password not match with password.',
+            'cpass.required' => 'The confirm password is required.',
         ]);
         
         $userData = new Userdata();
@@ -60,9 +61,12 @@ class registerController extends Controller
         $user_list1 = Userdata::get();
         $user_list  = $user_list1->toArray();
 
-        if(!empty($user_list)){
-            foreach($user_list as $udata){
-                if($udata['user_name'] == $request->uname && $udata['password'] == $request->pass){
+        if(!empty($user_list))
+        {
+            foreach($user_list as $udata)
+            {
+                if($udata['user_name'] == $request->uname && $udata['password'] == $request->pass)
+                {
                     $userData = 'login';
                     session()->put('name', $udata['user_name']);
                     session()->put('id', $udata['id']);
@@ -70,7 +74,6 @@ class registerController extends Controller
             }
         }
 
-        // echo '<pre>';print_r($user_list);exit;
         if($userData == 'login'){
             $data['user_list'] = $user_list;
             return view('dashboard',$data);

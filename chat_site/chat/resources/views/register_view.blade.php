@@ -4,7 +4,7 @@
 
         <div class="form-group">
             <label for="register_uname">Username</label>
-            <input type="text" class="form-control" name="uname" id="register_uname" placeholder="Enter email">
+            <input type="text" class="form-control" name="uname" id="register_uname" placeholder="Enter Name" required>
         </div>
         @error('uname')
             <p class="text-danger">{{ $message }}</p>
@@ -12,7 +12,7 @@
 
         <div class="form-group">
             <label for="register_email">Email address</label>
-            <input type="text" class="form-control" name="email" id="register_email" placeholder="Enter email">
+            <input type="text" class="form-control" name="email" id="register_email" placeholder="Enter Email" required>
             <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
         </div>
         @error('email')
@@ -21,15 +21,15 @@
 
         <div class="form-group">
             <label for="register_password">Password</label>
-            <input type="password" class="form-control" name="pass" id="register_password" placeholder="Password">
+            <input type="password" class="form-control" name="pass" id="register_password" placeholder="Password" required>
         </div>
         @error('pass')
-            <p class="text-danger">{{ $message }}</p>
+            <p class="text-danger col-10">{{ $message }}</p>
         @enderror
 
         <div class="form-group">
             <label for="comfirm_register_password">Confirm password</label>
-            <input type="password" class="form-control" name="cpass" id="comfirm_register_password" placeholder="Password">
+            <input type="password" class="form-control" name="cpass" id="comfirm_register_password" placeholder="Confirm Password" required>
         </div>
         @error('cpass')
             <p class="text-danger">{{ $message }}</p>
