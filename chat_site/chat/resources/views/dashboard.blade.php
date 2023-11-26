@@ -7,7 +7,24 @@
     2 Chat Part
     3 Input Part
 --}}
-
+<style>
+    .msg_dd > div{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        font-size: 15px;
+    }
+    .msg_dd > div:hover{
+        background: var(--blue_theme);
+        color: #fff;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    .msg_dd > div >i{
+        font-size: 18px !important;
+        padding-right: 5px;
+    }
+</style>
 @extends('layouts.dashboard_layout')
 @section('chat_dash')
     @php
@@ -135,20 +152,6 @@
 @section('script')
 <script>
     $(document).ready(function() {
-        var conn = new WebSocket('ws://127.0.0.1:8080');
-        
-        conn.onopen = function(e) 
-        {
-            console.log("Connection established!");
-            var user_id = {{ Session::get("id") }};
-            get_all_messages(user_id);
-        };
-
-        conn.onmessage = function(e) 
-        {
-            var user_id = $('#select_user_id').attr('user_id');
-            get_all_messages(user_id);
-        };
         
         $(document).on('keypress',function(e) 
         {
@@ -216,39 +219,6 @@
             $(scroll_name).animate({ scrollTop: 20000000 }, "slow");
         }
 
-        function get_all_messages(user_id)
-        {
-            var token = $('meta[name="csrf-token"]').attr('content');
-            $.ajax({
-                url: '{{ route("get_all_messages") }}',
-                method: 'POST',
-                data: { 
-                        '_token': token,
-                        'user_id':user_id
-                    },
-                beforeSend: function(){
-                    $('.chatbox').css('display','none');
-                    $('.chatbox_lorder').removeClass('d-none');
-                },
-                success: function (res) 
-                {
-                    $('.chatbox_lorder').addClass('d-none');
-                    $('.chatbox').css('display','flex');
-                    
-                    if (res.status == true) {
-                        if($('.chatbox').append(res.messages)){
-                            $(".chat_part").animate({ scrollTop: 20000000 }, "slow");
-                        }
-                    } else {
-                        console.error('AJAX request failed.');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('AJAX error:', error);
-                }
-            });
-        }
-        
         $('.invite_user').on('click',function()
         {
             var token = $('meta[name="csrf-token"]').attr('content');
@@ -261,6 +231,7 @@
                         '_token': token,
                         'user_id':user_id
                     },
+                dataType: 'json',
                 success: function (res) 
                 {
                     alert('done...');
@@ -274,33 +245,31 @@
             });
         });
 
-
         // Listen for keyup event on the search input
         $(".search_box input").on("keyup", function () {
-                var searchText = $(this).val().toLowerCase();
+            var searchText = $(this).val().toLowerCase();
 
-                // Loop through each user details container
-                $(".user_list_container .user_details").each(function () {
-                    var userName = $(this).find(".user_full_name").text().toLowerCase();
+            // Loop through each user details container
+            $(".user_list_container .user_details").each(function () {
+                var userName = $(this).find(".user_full_name").text().toLowerCase();
 
-                    // Check if the user's name contains the search text
-                    if (userName.indexOf(searchText) !== -1) 
-                    {
-                        // Highlight the matching text
-                        $(this).find(".user_full_name").html(
-                            userName.replace(new RegExp(searchText, "gi"), function (match) {
-                                return '<span class="bg-warning">' + match + '</span>';
-                            })
-                        ).css('text-transform','capitalize');
-                        $(this).show();
-                    } else {
-                        // Remove highlighting and hide the container
-                        $(this).find(".user_full_name").html(userName);
-                        $(this).hide();
-                    }
-                });
+                // Check if the user's name contains the search text
+                if (userName.indexOf(searchText) !== -1) 
+                {
+                    // Highlight the matching text
+                    $(this).find(".user_full_name").html(
+                        userName.replace(new RegExp(searchText, "gi"), function (match) {
+                            return '<span class="bg-warning">' + match + '</span>';
+                        })
+                    ).css('text-transform','capitalize');
+                    $(this).show();
+                } else {
+                    // Remove highlighting and hide the container
+                    $(this).find(".user_full_name").html(userName);
+                    $(this).hide();
+                }
             });
-
+        });
         
     });
 </script>

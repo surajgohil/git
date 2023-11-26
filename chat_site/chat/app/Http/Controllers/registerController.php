@@ -34,7 +34,7 @@ class registerController extends Controller
         $userData = new Userdata();
         $userData->user_name = $request->uname;
         $userData->email     = $request->email;
-        $userData->password  = $request->pass;
+        $userData->password  = $password = Hash::make($request->pass);
 
         if($userData->save()){
             return view('login_view');
