@@ -42,7 +42,7 @@ class chatController extends Controller
         $messages = $all_messages->toArray();
         
         // message
-        $html .= '<div class="msg_dropdown" msg_id="'.$messages['id'].'" style="justify-content: end; align-items: end;">';
+        $html .= '<div class="msg_dropdown" side="right" msg_id="'.$messages['id'].'" style="justify-content: end; align-items: end;">';
         $html .= '     <span style="border-radius: 8px 8px 0px 8px;">'.$messages['msg'].'</span>';
         $html .= '     <span style="border-radius: 50%;height: 20px; width: 0%; font-size: 8px; margin-left: 5px;display: flex; justify-content: center;"> US </span>';
         $html .= '</div>';
@@ -65,12 +65,27 @@ class chatController extends Controller
 
             if(!empty($messages))
             {
+                $msg_date = '';
                 foreach($messages as $data)
                 {
+                    $format = 'd-m-y';
+                    $date = substr($data['created_at'],0,10);
+                    $create_date = date_create($date);
+                    $final_date = date_format($create_date,$format);
+
+                    if($msg_date != $final_date)
+                    {
+                        if(date('d-m-y') == $final_date) {
+                            $html .= '<div class="m-auto" style="font-weight: bold; color: dimgray; font-size: 14px; height: 81px; width: 100%; display: flex; justify-content: center;">Today</div>';
+                        }else{
+                            $html .= '<div class="m-auto" style="font-weight: bold; color: dimgray; font-size: 14px; height: 81px; width: 100%; display: flex; justify-content: center;">' . $final_date . '</div>';
+                        }
+                    }
+                    $msg_date = $final_date;
                     if($data['sender'] == $login_user_id)
                     {
                         // message
-                        $html .= '<div class="msg_dropdown" msg_id="'.$data['id'].'" style="cursor: pointer; justify-content: end; align-items: end;">';
+                        $html .= '<div class="msg_dropdown" side="right" msg_id="'.$data['id'].'" style="cursor: pointer; justify-content: end; align-items: end;">';
                         $html .= '     <span class="msg_text" style="border-radius: 8px 8px 0px 8px;">'.$data['msg'].'</span>';
                         $html .= '     <span class="sender_side_avatar">'.substr($login_user_name,0,2).'</span>';
                         $html .= '</div>';
@@ -82,12 +97,13 @@ class chatController extends Controller
                         if(!empty($opt_user_data))
                         {
                             // message
-                            $html .= '<div class="msg_dropdown" msg_id="'.$data['id'].'" style="cursor: pointer; display: flex; align-items: end;">';
+                            $html .= '<div class="msg_dropdown" side="left" msg_id="'.$data['id'].'" style="cursor: pointer; display: flex; align-items: end;">';
                             $html .= '     <span class="receiver_side_avatar">'.substr($opt_user_data[0]['user_name'],0,2).'</span>';
                             $html .= '     <span class="msg_text">'.$data['msg'].'</span>';
                             $html .= '</div>'; 
                         }
                     }
+                   
                 }
             }else{
                 $html .= '<div class="message_not_found_error w-100 h-100 d-flex justify-content-center align-items-center">';
@@ -107,8 +123,8 @@ class chatController extends Controller
                 foreach($messages as $data)
                 {
                     // message
-                    $html .= '<div class="msg_dropdown" msg_id="'.$data['id'].'" style="justify-content: end;align-items:end;">';
-                    $html .= '  <span style="border-radius: 8px 8px 0px 8px">'.$data['msg'].'</span>';
+                    $html .= '<div class="msg_dropdown" side="right" msg_id="'.$data['id'].'" style="justify-content: end;align-items:end;">';
+                    $html .= '  <span class="msg_text" style="border-radius: 8px 8px 0px 8px">'.$data['msg'].'</span>';
                     $html .= '  <span style="border-radius: 50%;height: 20px; width: 0%; font-size: 8px; margin-left: 5px;display: flex; justify-content: center;"> US </span>';
                     $html .= '</div>';
                 }

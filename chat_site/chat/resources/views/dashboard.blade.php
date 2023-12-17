@@ -134,13 +134,17 @@
                 <input type="hidden" id="select_user_id">
                 <div class="row h-100">
                     <div class="col-11 message_input">
-                        <textarea type="text" name="message" id="send-btn" placeholder="Message..."></textarea>
+                        <div id="open_emoji_box" style="cursor: pointer;font-size: 28px;">😀</div>
+                        <textarea type="text" name="message" class="message_box" id="send-btn" placeholder="Message..."></textarea>
                     </div>
                     <div class="col-1 send_message_btn">
                         <button class="btn">
                             <i class="material-icons">send</i>
                         </button>
                     </div>
+                </div>
+                <div id="open_emoji_container" style="display: none;position: relative; top: -180px; background: white; height: 100px; width: 100%; overflow-y: scroll; border-radius: 10px; font-size: 30px; padding: 0px 8px 0px 20px;">
+
                 </div>
             </div>
 
@@ -152,9 +156,10 @@
 @section('script')
 <script>
     $(document).ready(function() {
-        
-        $(document).on('keypress',function(e) 
+        var cursor_position = 0;
+        $(document).on('keypress click','.message_box',function(e) 
         {
+            cursor_position = this.selectionStart;
             if(e.which == 13) {
                 send_msg();
             }
@@ -271,6 +276,30 @@
             });
         });
         
+        var cur_pos = 0;
+        $(document).on('click','.emoji_box span',function(){
+            var emoji = $(this).text();
+            var msg = $('.message_box').val();
+            var msg_first = msg.substring(0,cursor_position);
+            var msg_second = msg.substring(cursor_position);
+            var msg_with_emoji = msg_first + emoji + msg_second;
+
+            $('.message_box').val(msg_with_emoji);
+
+            var new_msg = $('.message_box').val();
+            cursor_position = new_msg.length - msg_second.length;
+        });
+
+        $('#open_emoji_box').on('click',function(){
+            var emoji = emojis(); 
+            $('#open_emoji_container').empty();
+            $.each(emoji,function(index,value) {
+                $('#open_emoji_container').append('<span>'+ value +'</span>');
+            });
+            $('#open_emoji_container').toggle();
+        });
+
+
     });
 </script>
 @endsection
