@@ -31,7 +31,8 @@
         font-weight: 400;
     }
     .emoji_box{
-        width: 300px;
+        width: 185px;
+        /* width: 300px; */
         height: 37px;
         overflow-y: scroll;
         background: #fff;

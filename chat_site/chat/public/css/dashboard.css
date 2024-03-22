@@ -232,12 +232,14 @@ START => SECTION 2
     background: #ffffff;
 }
 .chat_part{
-    height: 80%;
+    height: 75%;
+    /* height: 80%; */
     position: relative;
     overflow-y: scroll;
 }
 .input_part{
-    height: 10%;
+    height: 15%;
+    /* height: 10%; */
     background: #ffffff;
     border-radius: 10px 10px 0px 0px;
 }
@@ -309,6 +311,7 @@ START => SECTION 2
 .chat_part .chatbox div{
     margin-top: 10px;
     display: flex;
+    font-size: 12px;
 }
 .chat_part .chatbox span{
     max-width: 60%;
